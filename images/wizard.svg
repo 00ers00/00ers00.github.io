@@ -1,0 +1,262 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600">
+  <!-- The Late Wizard (v3, Forest Scholar): an original character, caricatured from Eric's own face -->
+  <defs>
+    <pattern id="stubble" width="4" height="4" patternUnits="userSpaceOnUse">
+      <circle cx="1" cy="1" r="0.7" fill="#6f6875" opacity="0.7"/>
+      <circle cx="3" cy="3" r="0.5" fill="#9a939e" opacity="0.5"/>
+    </pattern>
+    <pattern id="stripes" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(20)">
+      <rect width="10" height="10" fill="#f6ead6"/>
+      <rect width="10" height="5" fill="#3f6a52"/>
+    </pattern>
+    <radialGradient id="flame" cx="0.5" cy="0.65" r="0.6">
+      <stop offset="0" stop-color="#fffbe6"/>
+      <stop offset="0.5" stop-color="#bff0e4"/>
+      <stop offset="1" stop-color="#6fcdbd"/>
+    </radialGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#fff0bf" stop-opacity="0.8"/>
+      <stop offset="0.45" stop-color="#d9f3ea" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#d9f3ea" stop-opacity="0"/>
+    </radialGradient>
+    <path id="spark" d="M0,-6 L1.6,-1.6 L6,0 L1.6,1.6 L0,6 L-1.6,1.6 L-6,0 L-1.6,-1.6 Z"/>
+    <path id="moon" d="M0,-6 A6,6 0 1,0 4,4.5 A4.6,4.6 0 1,1 0,-6 Z"/>
+  </defs>
+
+  <!-- Ground shadow -->
+  <ellipse cx="200" cy="588" rx="120" ry="9" fill="#6f6585" opacity="0.18"/>
+
+  <!-- Legs: mismatched stockings (one striped, one mustard) -->
+  <path d="M148,536 L172,536 L152,576 L132,572 Z" fill="url(#stripes)"/>
+  <path d="M128,568 C114,574 112,586 124,589 L156,589 C161,581 155,572 146,569 Z" fill="#6a4f6e"/>
+  <path d="M232,536 L256,536 L274,576 L252,579 Z" fill="#e2bd62"/>
+  <path d="M248,574 C246,586 252,590 262,590 L296,590 C305,588 306,580 298,576 C288,572 270,572 260,572 Z" fill="#6a4f6e"/>
+  <path d="M298,576 C310,572 314,562 307,555" stroke="#6a4f6e" stroke-width="6" stroke-linecap="round" fill="none"/>
+  <circle cx="306" cy="553" r="4.5" fill="#ecc770"/>
+
+  <!-- Robe lining, flaring out behind -->
+  <path d="M124,320 C108,420 90,510 80,566 C100,568 112,560 128,560 Z" fill="#d6b25f"/>
+
+  <!-- Robe -->
+  <path d="M184,232 C204,240 220,240 238,232 L282,244 C292,248 297,258 295,272 C296,330 296,430 300,540
+           C270,550 246,544 222,552 C196,560 174,548 150,556 C128,562 110,552 92,560
+           C106,480 118,380 125,300 C125,276 127,258 134,250 Z" fill="#5f8a6e"/>
+  <path d="M134,250 C127,258 125,276 125,300 C118,380 106,480 92,560 C104,556 114,556 124,556
+           C134,470 144,380 152,300 C154,276 156,258 166,244 Z" fill="#4e7660" opacity="0.75"/>
+  <path d="M238,234 L280,246" stroke="#4e7660" stroke-width="2" opacity="0.8" stroke-linecap="round"/>
+  <path d="M300,540 C270,550 246,544 222,552 C196,560 174,548 150,556 C128,562 110,552 92,560"
+        fill="none" stroke="#f3dc97" stroke-width="3.5" opacity="0.9"/>
+  <path d="M186,232 C206,240 220,240 236,232" fill="none" stroke="#f3dc97" stroke-width="4"/>
+
+  <!-- A band of embroidered stars just above the hem -->
+  <g fill="#f3dc97" opacity="0.9">
+    <use href="#spark" transform="translate(110,546) scale(0.75)"/>
+    <use href="#spark" transform="translate(140,544) scale(0.75)"/>
+    <use href="#spark" transform="translate(170,542) scale(0.75)"/>
+    <use href="#spark" transform="translate(200,542) scale(0.75)"/>
+    <use href="#spark" transform="translate(230,538) scale(0.75)"/>
+    <use href="#spark" transform="translate(262,532) scale(0.75)"/>
+    <use href="#spark" transform="translate(290,526) scale(0.75)"/>
+  </g>
+  <!-- A few stars and moons, scattered sparingly -->
+  <g fill="#f3dc97" opacity="0.85">
+    <use href="#spark" transform="translate(222,262) scale(0.9)"/>
+    <use href="#spark" transform="translate(176,424) scale(0.7)"/>
+    <use href="#spark" transform="translate(284,472) scale(0.7)"/>
+    <use href="#moon" transform="translate(206,482) scale(1)"/>
+  </g>
+
+  <!-- Patches -->
+  <g transform="translate(158,500) rotate(8)">
+    <rect x="-22" y="-19" width="44" height="38" rx="4" fill="#9c72a8"/>
+    <rect x="-17" y="-14" width="34" height="28" rx="3" fill="none" stroke="#f7eed6" stroke-width="2" stroke-dasharray="5 4"/>
+  </g>
+  <g transform="translate(262,500) rotate(-7)">
+    <rect x="-15" y="-13" width="30" height="26" rx="3" fill="#c98f6a"/>
+    <rect x="-10" y="-8" width="20" height="16" rx="2" fill="none" stroke="#f7eed6" stroke-width="2" stroke-dasharray="4 3"/>
+  </g>
+
+  <!-- Rope belt, with a ring of keys and a little pouch -->
+  <path d="M138,358 C180,372 240,372 282,354" stroke="#e7c06a" stroke-width="8" stroke-linecap="round" fill="none"/>
+  <path d="M198,368 C196,384 192,396 190,408" stroke="#e7c06a" stroke-width="5" stroke-linecap="round" fill="none"/>
+  <circle cx="190" cy="412" r="5.5" fill="#e7c06a"/>
+  <circle cx="246" cy="374" r="7" fill="none" stroke="#b8923f" stroke-width="2.5"/>
+  <g fill="#c9a24f">
+    <path d="M242,380 L240,398 L245,398 L245,394 L249,394 L249,390 L245,390 L246,380 Z"/>
+    <path d="M251,380 L254,394 L258,393 L257,390 L260,389 L259,386 L256,386 L255,379 Z"/>
+  </g>
+  <path d="M154,362 C150,378 152,392 162,396 C172,398 176,386 172,368 Z" fill="#a9825f"/>
+  <path d="M154,364 C160,368 168,368 172,366" stroke="#8a6748" stroke-width="2" fill="none"/>
+
+  <!-- Pocket with a tiny owl peeking out (and a rolled scroll) -->
+  <g transform="translate(244,430)">
+    <rect x="-24" y="-30" width="9" height="34" rx="4" fill="#f7eed6" stroke="#d9c79f" stroke-width="1.5" transform="rotate(-12)"/>
+    <ellipse cx="6" cy="-6" rx="15" ry="14" fill="#b08968"/>
+    <path d="M-6,-16 L-3,-26 L2,-17 Z M10,-17 L15,-26 L18,-16 Z" fill="#b08968"/>
+    <circle cx="0" cy="-8" r="5.5" fill="#fff8ec"/><circle cx="12" cy="-8" r="5.5" fill="#fff8ec"/>
+    <circle cx="1" cy="-7" r="2.8" fill="#3f3450"/><circle cx="13" cy="-7" r="2.8" fill="#3f3450"/>
+    <path d="M6,-4 L9,0 L3,0 Z" fill="#e7bf62"/>
+    <path d="M-26,-2 L28,-2 L26,30 C10,34 -10,34 -24,30 Z" fill="#4e7660"/>
+    <path d="M-21,3 L23,3 L21,26 C8,29 -8,29 -19,26 Z" fill="none" stroke="#f7eed6" stroke-width="1.6" stroke-dasharray="4 3" opacity="0.8"/>
+  </g>
+
+  <!-- Back arm: a hand lantern with a gentle, magical flame -->
+  <circle cx="140" cy="440" r="58" fill="url(#glow)"/>
+  <path d="M135,249 C124,274 119,316 116,356 C114,372 120,384 132,386 L156,384 C158,350 162,310 170,280 Z" fill="#4e7660"/>
+  <g fill="#f3dc97" opacity="0.85">
+    <use href="#spark" transform="translate(148,286) scale(0.7)"/>
+    <use href="#moon" transform="translate(134,322) scale(0.85)"/>
+    <use href="#spark" transform="translate(152,350) scale(0.55)"/>
+    <use href="#spark" transform="translate(128,362) scale(0.45)"/>
+  </g>
+  <path d="M120,372 L157,372 L157,388 L120,388 Z" fill="#e7c06a"/>
+  <path d="M138,400 L138,412" stroke="#a07d3e" stroke-width="3"/>
+  <circle cx="138" cy="404" r="6" fill="none" stroke="#a07d3e" stroke-width="3"/>
+  <path d="M124,418 L152,418 L146,410 L130,410 Z" fill="#c9a15a"/>
+  <rect x="124" y="418" width="28" height="40" rx="4" fill="#eaf7f4" fill-opacity="0.75" stroke="#c9a15a" stroke-width="3"/>
+  <path d="M138,452 C128,446 130,436 135,430 C136,437 140,436 139,428 C146,434 150,446 138,452 Z" fill="url(#flame)"/>
+  <path d="M138,418 L138,458" stroke="#c9a15a" stroke-width="1.5" opacity="0.6"/>
+  <path d="M120,458 L156,458 L152,466 L124,466 Z" fill="#a07d3e"/>
+  <g fill="#fff3c4">
+    <use href="#spark" transform="translate(112,420) scale(0.5)"/>
+    <use href="#spark" transform="translate(166,436) scale(0.45)"/>
+    <circle cx="160" cy="410" r="1.5"/><circle cx="116" cy="448" r="1.3"/>
+  </g>
+  <!-- Hand gripping the lantern ring -->
+  <path d="M126,390 C124,402 132,410 140,408 C150,406 154,396 150,388 Z" fill="#efc2a8"/>
+  <path d="M132,402 C136,405 142,405 146,401" stroke="#d9a58c" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+
+  <g transform="translate(210,236) scale(0.8) translate(-210,-236)">
+  <!-- Neck and ears -->
+  <path d="M194,206 L226,206 L230,240 L190,240 Z" fill="#e3b39a"/>
+  <ellipse cx="160" cy="152" rx="8" ry="15" fill="#e9b49b"/>
+  <ellipse cx="260" cy="152" rx="8" ry="15" fill="#e9b49b"/>
+
+  <!-- Face: broad forehead, firm jaw -->
+  <path d="M162,128 C162,100 182,88 210,88 C238,88 258,100 258,128 L260,166 C260,190 250,206 236,214
+           L222,220 C216,222 204,222 198,220 L184,214 C170,206 160,190 160,166 Z" fill="#efc3a7"/>
+  <path d="M168,166 C172,176 178,184 186,188" stroke="#dca78e" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <path d="M252,166 C248,176 242,184 234,188" stroke="#dca78e" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <!-- Forehead lines -->
+  <g stroke="#ddaa90" stroke-width="1.4" fill="none" stroke-linecap="round">
+    <path d="M190,114 C202,111 218,111 230,114"/><path d="M194,120 C204,118 216,118 226,120"/>
+  </g>
+
+  <!-- Strong, straight brows -->
+  <path d="M172,132 C182,123 196,123 206,128 L205,135 C195,131 184,132 173,138 Z" fill="#a87a5f"/>
+  <path d="M214,128 C224,123 238,123 248,130 L247,137 C236,132 225,131 215,135 Z" fill="#a87a5f"/>
+
+  <!-- Light blue eyes, glancing down at his book -->
+  <ellipse cx="191" cy="144" rx="8.5" ry="3.8" fill="#ffffff"/>
+  <ellipse cx="229" cy="144" rx="8.5" ry="3.8" fill="#ffffff"/>
+  <circle cx="193" cy="144" r="3.6" fill="#86abc2"/><circle cx="231" cy="144" r="3.6" fill="#86abc2"/>
+  <circle cx="193.4" cy="144.4" r="1.6" fill="#2f3a48"/><circle cx="231.4" cy="144.4" r="1.6" fill="#2f3a48"/>
+  <circle cx="192" cy="142.6" r="0.9" fill="#ffffff"/><circle cx="230" cy="142.6" r="0.9" fill="#ffffff"/>
+  <path d="M182,142 C186,139 196,139 200,142" stroke="#8a5e4e" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+  <path d="M220,142 C224,139 234,139 238,142" stroke="#8a5e4e" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+  <g stroke="#dba58c" stroke-width="1.2" fill="none" stroke-linecap="round">
+    <path d="M184,150 C189,152 195,152 199,150"/><path d="M222,150 C227,152 233,152 237,150"/>
+    <path d="M241,141 l5,-2"/><path d="M241,145 l5,1"/><path d="M179,141 l-5,-2"/><path d="M179,145 l-5,1"/>
+  </g>
+
+  <!-- Long, straight nose -->
+  <path d="M206,140 C205,156 202,168 200,178 C206,185 216,185 222,178 C220,166 216,154 214,140 Z" fill="#e9b298"/>
+  <path d="M214,140 C215,154 217,166 221,177" stroke="#d29a80" stroke-width="1.6" fill="none"/>
+  <path d="M200,178 C204,184 216,184 222,178" stroke="#c98a72" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <circle cx="205" cy="181" r="1.6" fill="#b97c66"/><circle cx="217" cy="181" r="1.6" fill="#b97c66"/>
+
+  <!-- Smile lines and a firm mouth with a hint of a smile -->
+  <path d="M197,180 C189,188 187,197 191,205" stroke="#d69b83" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+  <path d="M225,180 C233,188 235,197 231,205" stroke="#d69b83" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+  <path d="M199,199 C207,201 218,201 229,194" stroke="#9c5d54" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+  <path d="M204,206 C210,208 216,208 221,206" stroke="#d69a86" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+  <path d="M204,214 C209,216 215,216 220,214" stroke="#dfa891" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+
+  <!-- Short, trimmed salt-and-pepper beard and mustache -->
+  <path d="M159,140 L160,166 C160,194 170,212 186,224 C196,232 204,236 211,236 C218,236 226,232 236,224
+           C252,212 262,194 262,166 L263,140 L256,140 C254,164 247,180 238,190 C230,183 221,181 211,183
+           C201,181 192,183 184,190 C175,180 168,164 166,140 Z" fill="#9c9690"/>
+  <g stroke="#dedad3" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.9">
+    <path d="M176,196 C182,210 192,222 204,230"/><path d="M246,196 C240,210 230,222 218,230"/>
+    <path d="M211,206 L211,230"/><path d="M168,160 C170,176 174,188 180,198"/><path d="M254,160 C252,176 248,188 242,198"/>
+  </g>
+  <g stroke="#6f6a65" stroke-width="1.6" stroke-linecap="round" fill="none" opacity="0.8">
+    <path d="M190,210 C196,218 204,224 210,228"/><path d="M232,210 C226,218 218,224 212,228"/>
+  </g>
+  <path d="M192,192 C200,184 222,184 231,191 C226,198 218,196 211,194 C204,196 197,198 192,192 Z" fill="#7d7873"/>
+  <path d="M199,199 C207,201 218,201 229,195" stroke="#8a4f48" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+  <path d="M203,203 C209,206 216,206 222,203" stroke="#d69a86" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+
+  <!-- Swept-back silver hair with a side part -->
+  <path d="M164,130 C158,106 164,88 178,80 C188,62 214,46 240,52 C262,58 274,80 268,104
+           C266,112 264,118 262,122 C258,110 252,100 240,95 C226,89 206,92 192,98 C180,104 172,114 169,124 C166,124 164,126 164,128 Z" fill="#cfc8bb"/>
+  <path d="M188,84 C202,62 230,52 254,64" stroke="#e8e3d9" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <g stroke="#b2ab9e" stroke-width="1.8" fill="none" stroke-linecap="round">
+    <path d="M186,96 C198,76 228,66 256,78"/><path d="M178,108 C184,92 200,80 222,76"/>
+    <path d="M246,58 C262,66 270,84 266,108"/>
+  </g>
+  <!-- Side part -->
+  <path d="M170,124 C172,108 176,96 182,86" stroke="#9f988b" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+  <path d="M164,124 C163,132 164,140 166,146 L170,146 C170,138 169,132 170,126 Z" fill="#bdb6a9"/>
+  <path d="M262,122 C263,130 262,138 260,144 L256,144 C256,136 257,130 256,124 Z" fill="#bdb6a9"/>
+
+  <!-- Hat, seated on his head and tilted back, hair sweeping out beneath the brim -->
+  <path d="M150,90 C166,62 186,36 198,14 C200,8 196,2 188,2 C180,2 172,8 168,16 C176,12 184,12 188,18
+           C210,30 266,52 274,86 Z" fill="#2f5a46"/>
+  <path d="M150,90 C166,62 186,36 198,14 C200,10 199,6 196,4 C190,32 180,62 176,90 Z" fill="#244839"/>
+  <circle cx="166" cy="18" r="6" fill="#ecc770"/>
+  <g transform="translate(226,58) rotate(-18)">
+    <rect x="-9" y="-7" width="18" height="14" rx="2" fill="#ecc770"/>
+    <rect x="-6" y="-4" width="12" height="8" rx="1.5" fill="none" stroke="#f7eed6" stroke-width="1.4" stroke-dasharray="3 2"/>
+  </g>
+  <path d="M154,88 C188,76 236,74 270,82 L268,94 C236,88 190,90 158,100 Z" fill="#d6b25f"/>
+  <use href="#spark" transform="translate(180,90) scale(0.45)" fill="#fff3cf"/>
+  <!-- Brim: top surface and the darker underside as it tips back -->
+  <path d="M146,96 C160,80 252,70 276,82 C282,88 272,96 256,98 C228,92 186,96 162,104 C150,106 142,102 146,96 Z" fill="#2f5a46"/>
+  <path d="M162,104 C186,96 228,92 256,98 C246,104 220,104 200,106 C184,108 170,108 162,104 Z" fill="#244839"/>
+  <!-- His other spectacles, forgotten on the hat band -->
+  <circle cx="234" cy="87" r="6" fill="#ffffff" fill-opacity="0.25" stroke="#5b4e6b" stroke-width="2"/>
+  <circle cx="248" cy="87" r="6" fill="#ffffff" fill-opacity="0.25" stroke="#5b4e6b" stroke-width="2"/>
+  <path d="M240,87 L242,87" stroke="#5b4e6b" stroke-width="2"/>
+
+  <!-- A quill tucked behind his ear -->
+  <path d="M262,150 C268,124 276,104 290,90 C288,110 280,128 268,152 Z" fill="#f4ecd8" stroke="#d6c59f" stroke-width="1.5"/>
+  <path d="M265,150 C272,128 280,108 289,93" stroke="#cdbb93" stroke-width="1.2" fill="none"/>
+  </g>
+
+  <!-- Front arm: wide sleeve -->
+  <path d="M272,244 C294,254 306,282 308,316 C310,334 306,348 296,352 L262,352 C262,320 258,290 250,270 Z" fill="#5f8a6e"/>
+  <path d="M262,344 L298,344 L296,357 L262,357 Z" fill="#e7c06a"/>
+  <g fill="#f3dc97" opacity="0.85">
+    <use href="#spark" transform="translate(286,264) scale(0.65)"/>
+    <use href="#moon" transform="translate(299,290) scale(0.75)"/>
+    <use href="#spark" transform="translate(196,254) scale(0.6)"/>
+    <use href="#spark" transform="translate(252,256) scale(0.5)"/>
+    <use href="#moon" transform="translate(176,282) scale(0.8)"/>
+    <use href="#spark" transform="translate(196,442) scale(0.6)"/>
+  </g>
+
+  <!-- A proper, hefty open book -->
+  <g transform="translate(232,322) rotate(-7)">
+    <path d="M-64,-36 L0,-30 L64,-36 L66,40 L0,46 L-66,40 Z" fill="#7d4a5a"/>
+    <path d="M-58,-33 C-32,-38 -12,-34 0,-27 L0,42 C-12,36 -32,32 -58,36 Z" fill="#f7f0de"/>
+    <path d="M0,-27 C12,-34 32,-38 58,-33 L58,36 C32,32 12,36 0,42 Z" fill="#fbf6e8"/>
+    <path d="M0,-27 L0,42" stroke="#d3c19a" stroke-width="1.5"/>
+    <g stroke="#c9b48a" stroke-width="1.3" stroke-linecap="round">
+      <path d="M-50,-22 L-10,-20"/><path d="M-50,-14 L-10,-12"/><path d="M-50,-6 L-14,-4"/>
+      <path d="M-50,2 L-10,4"/><path d="M-50,10 L-12,12"/><path d="M-50,18 L-20,20"/>
+      <path d="M10,18 L50,16"/><path d="M10,26 L42,24"/>
+    </g>
+    <!-- A star chart sketched on the right-hand page -->
+    <g stroke="#9c72a8" stroke-width="1.2" fill="none" opacity="0.8">
+      <circle cx="32" cy="-6" r="16"/>
+      <path d="M22,-14 L30,-2 L42,-10 L38,4"/>
+    </g>
+    <g fill="#9c72a8"><circle cx="22" cy="-14" r="1.8"/><circle cx="30" cy="-2" r="1.8"/><circle cx="42" cy="-10" r="1.8"/><circle cx="38" cy="4" r="1.8"/></g>
+    <path d="M8,42 L10,64 L14,58 L18,64 L17,42 Z" fill="#ef9fa8"/>
+  </g>
+  <!-- Hand supporting the book, thumb over the page -->
+  <path d="M276,344 C272,356 280,366 292,364 C302,362 306,350 300,342 Z" fill="#efc2a8"/>
+  <path d="M282,338 C278,330 280,322 286,320 C290,326 290,334 288,342 Z" fill="#efc2a8"/>
+  <path d="M284,354 C288,357 294,357 298,353" stroke="#d9a58c" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+</svg>

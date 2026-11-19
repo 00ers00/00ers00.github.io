@@ -1,0 +1,341 @@
+/* ==========================================================================
+   Late Wizard — shared styles for every page on latewizard.com
+   ========================================================================== */
+
+/* ---- Design tokens: change a color here and it changes everywhere ---- */
+:root {
+  --ink: #3f3450;          /* main text: deep plum-grey */
+  --ink-soft: #6b5f7a;     /* secondary text */
+  --wood: #c99b6d;         /* sign board */
+  --wood-dark: #a87a4f;    /* sign edges, grain */
+  --wood-ink: #4a3121;     /* text carved into the sign */
+  --parchment: #fbf5e8;
+  --teal: #5fada6;
+  --plum: #9c72a8;
+  --gold: #ecc770;
+  --font-display: "IM Fell English SC", "Palatino Linotype", Palatino, Georgia, serif;
+  --font-body: "Lora", Georgia, "Times New Roman", serif;
+}
+
+/* ---- Page basics ---- */
+* { box-sizing: border-box; }
+
+html, body { margin: 0; min-height: 100%; }
+
+body {
+  min-height: 100vh;
+  min-height: 100dvh;      /* "dynamic" height: handles phone address bars */
+  display: flex;
+  flex-direction: column;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.5;
+  /* The painted landscape fills the window and crops as needed */
+  background: #f3e9ee url("../images/landscape.svg") center bottom / cover no-repeat;
+}
+
+/* A soft white wash over the top of the sky, so headings stay readable */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0) 55%);
+  pointer-events: none;
+}
+
+a { color: inherit; }
+
+a:focus-visible {
+  outline: 3px solid var(--teal);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ---- Site title ---- */
+.hero {
+  text-align: center;
+  padding: clamp(24px, 6vh, 64px) 20px 0;
+}
+
+.hero h1 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(48px, 9vw, 104px);
+  line-height: 1;
+  margin: 0;
+  color: var(--ink);
+  letter-spacing: 0.02em;
+  text-shadow: 0 2px 0 rgba(255, 255, 255, 0.7), 0 0 30px rgba(255, 255, 255, 0.8);
+}
+
+.hero p {
+  margin: 10px 0 0;
+  font-style: italic;
+  font-size: clamp(16px, 2.2vw, 21px);
+  color: var(--ink-soft);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+/* ---- The stage: wizard on the left, signpost on the right ---- */
+.stage {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: end;
+  gap: 24px;
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 24px 24px 0;
+}
+
+.wizard {
+  justify-self: center;
+  /* He's tall and narrow, so size him by height and let width follow */
+  height: clamp(320px, 62vh, 580px);
+  width: auto;
+  max-width: 100%;
+  margin-bottom: 1vh;
+  animation: stride 1.6s ease-in-out infinite alternate;
+}
+
+/* A slow, unhurried sway as he walks and reads */
+@keyframes stride {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-5px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wizard { animation: none; }
+}
+
+/* ---- The Party Business signpost ---- */
+.signpost {
+  justify-self: center;
+  width: min(100%, 440px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sign {
+  position: relative;
+  width: 100%;
+  padding: 26px 28px 24px;
+  border-radius: 10px;
+  color: var(--wood-ink);
+  /* Painted wood: a base color plus faint horizontal grain lines */
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.07) 0 2px,
+      rgba(0, 0, 0, 0) 2px 9px,
+      rgba(90, 55, 25, 0.08) 9px 10px,
+      rgba(0, 0, 0, 0) 10px 23px
+    ),
+    var(--wood);
+  border: 3px solid var(--wood-dark);
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.25),
+    inset 0 -3px 0 rgba(0, 0, 0, 0.12),
+    0 14px 30px rgba(63, 52, 80, 0.25);
+}
+
+/* Nail heads in the top corners */
+.sign::before,
+.sign::after {
+  content: "";
+  position: absolute;
+  top: 12px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #8c6a4c;
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.35);
+}
+.sign::before { left: 12px; }
+.sign::after  { right: 12px; }
+
+.sign h2 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(30px, 4vw, 40px);
+  text-align: center;
+  margin: 0 0 4px;
+  /* A "carved" look: a light edge below the dark letters */
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+.sign .subtitle {
+  text-align: center;
+  font-style: italic;
+  font-size: 15px;
+  margin: 0 0 18px;
+  opacity: 0.8;
+}
+
+.sign ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+/* Each menu item is a small plank */
+.sign li a {
+  display: block;
+  padding: 10px 14px;
+  border-radius: 6px;
+  text-decoration: none;
+  background: rgba(255, 246, 228, 0.55);
+  border: 1px solid rgba(120, 80, 45, 0.35);
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.sign li a:hover {
+  transform: translateX(4px);
+  background: rgba(255, 246, 228, 0.85);
+}
+
+.sign .item-title {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 22px;
+  line-height: 1.2;
+}
+
+.sign .item-desc {
+  display: block;
+  font-size: 14px;
+  opacity: 0.85;
+}
+
+/* Coming-soon items: present but faded, with a little tag */
+.sign li.soon a { background: rgba(255, 246, 228, 0.25); }
+.sign li.soon .item-title { opacity: 0.7; }
+
+.tag {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  vertical-align: middle;
+  background: rgba(74, 49, 33, 0.12);
+}
+
+/* The wooden post the sign is nailed to */
+.post {
+  width: 22px;
+  height: clamp(40px, 9vh, 110px);
+  background: linear-gradient(to right, #a87a4f, #c99b6d 45%, #a87a4f);
+  border-radius: 0 0 4px 4px;
+}
+
+/* ---- "Back home" link, for every page except the home page ---- */
+.home-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 10;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-family: var(--font-display);
+  font-size: 18px;
+  text-decoration: none;
+  color: var(--ink);
+  background: rgba(251, 245, 232, 0.85);
+  border: 1px solid rgba(63, 52, 80, 0.15);
+  box-shadow: 0 2px 8px rgba(63, 52, 80, 0.12);
+}
+
+.home-link:hover { background: var(--parchment); }
+
+/* ---- A plain content area for new pages (see page-template.html) ---- */
+.page {
+  /* Size to the content; the auto bottom margin pushes the footer down */
+  width: min(100% - 40px, 760px);
+  margin: 72px auto auto;
+  padding: 28px 30px;
+  border-radius: 14px;
+  background: rgba(251, 245, 232, 0.92);
+  box-shadow: 0 14px 30px rgba(63, 52, 80, 0.15);
+}
+
+.page h1 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(32px, 6vw, 46px);
+  margin: 0 0 12px;
+}
+
+/* ---- Footer ---- */
+.site-footer {
+  text-align: center;
+  font-size: 13px;
+  color: var(--ink);
+  padding: 10px 16px 14px;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+/* ---- Coming Soon page ---- */
+.notice {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  padding: 24px 20px;
+}
+
+.scroll-card {
+  width: min(100%, 520px);
+  text-align: center;
+  padding: 28px 28px 30px;
+  border-radius: 14px;
+  background: rgba(251, 245, 232, 0.92);
+  border: 2px solid #e3d3b0;
+  box-shadow: 0 14px 30px rgba(63, 52, 80, 0.18);
+}
+
+.scroll-card img {
+  height: 200px;
+  width: auto;
+}
+
+.scroll-card h1 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(30px, 6vw, 40px);
+  margin: 6px 0 8px;
+}
+
+.scroll-card p { margin: 0 0 18px; color: var(--ink-soft); }
+
+.button {
+  display: inline-block;
+  padding: 10px 18px;
+  border-radius: 8px;
+  background: var(--teal);
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.button:hover { filter: brightness(1.07); }
+
+/* ---- Phones and narrow windows: stack everything in one column ---- */
+@media (max-width: 760px) {
+  .stage {
+    grid-template-columns: 1fr;
+    align-items: start;
+    padding-top: 18px;
+  }
+  .signpost { order: 1; }            /* menu first, it's what people came for */
+  .wizard   { order: 2; height: 360px; }
+  .post     { display: none; }
+}

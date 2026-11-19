@@ -1,0 +1,1011 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>EricVenture</title>
+<link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  /* Layout: a torchlit terminal carved into stone. Header, scrolling dungeon log, command bar. Single deliberate dark look. */
+  :root {
+    --stone: #1a1d24;
+    --stone-deep: #13151a;
+    --slab: #23272f;
+    --parchment: #e7ddc8;
+    --dust: #9c9585;
+    --torch: #e4aa5c;
+    --ember: #d9764f;
+    --arcane: #b09ddb;
+    --gold: #f0d06e;
+    --moss: #8fb88a;
+    --line: #353a45;
+    --font-display: "IM Fell English SC", "Palatino Linotype", Palatino, Georgia, serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Menlo, Consolas, monospace;
+    color-scheme: dark;
+  }
+  html, body { height: 100%; }
+  body {
+    background: var(--stone-deep);
+    color: var(--parchment);
+    font-family: var(--font-mono);
+    font-size: 14px;
+  }
+  .app {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    max-width: 760px;
+    margin: 0 auto;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-block: 12px;
+    gap: 10px;
+    box-sizing: border-box;
+  }
+  header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 30px;
+    letter-spacing: 0.04em;
+    margin: 0;
+    color: var(--torch);
+    text-shadow: 0 0 18px rgba(228, 170, 92, 0.25);
+  }
+  .status { color: var(--dust); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; }
+  .status b { color: var(--parchment); font-weight: 500; }
+  #log {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: auto;
+    background: var(--stone);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 10px 12px 18px;
+    scroll-behavior: smooth;
+    position: relative;
+  }
+  @media (prefers-reduced-motion: reduce) { #log { scroll-behavior: auto; } }
+  .block { white-space: pre; margin: 0 auto; width: fit-content; max-width: 100%; line-height: 1.45; color: var(--parchment); }
+  .b-room { color: var(--parchment); }
+  .b-box { color: #d8cdb6; }
+  .b-dread { color: var(--ember); }
+  .b-win { color: var(--gold); }
+  .b-wizard { color: var(--arcane); }
+  .b-plain { color: var(--dust); }
+  .cmd { color: var(--torch); margin: 10px 0 0; white-space: pre-wrap; }
+  .cmd::before { content: "> "; color: var(--dust); }
+  .menu { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 4px; }
+  form { display: flex; gap: 8px; }
+  #cmd {
+    flex: 1;
+    min-width: 0;
+    background: var(--slab);
+    color: var(--parchment);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 10px 12px;
+    font: inherit;
+    font-size: 16px;
+  }
+  #cmd::placeholder { color: var(--dust); }
+  #cmd:focus-visible, button:focus-visible { outline: 2px solid var(--torch); outline-offset: 2px; }
+  button {
+    font: inherit;
+    cursor: pointer;
+    border-radius: 6px;
+    border: 1px solid var(--line);
+    background: var(--slab);
+    color: var(--parchment);
+    padding: 9px 12px;
+  }
+  button:hover { border-color: var(--torch); }
+  button.primary { background: var(--torch); color: var(--stone-deep); border-color: var(--torch); font-weight: 500; }
+  button.primary:hover { filter: brightness(1.08); }
+  button:disabled { opacity: 0.4; cursor: default; border-color: var(--line); }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chips button { padding: 7px 10px; font-size: 13px; }
+  .chips .dir { min-width: 40px; }
+  .chips .sep { width: 1px; background: var(--line); margin: 2px 2px; }
+  .hint { color: var(--dust); font-size: 12px; margin: 0; }
+  .hint kbd { font: inherit; color: var(--parchment); }
+  @media (max-width: 480px) {
+    .hint { display: none; }
+    .chips button { padding: 6px 8px; font-size: 12px; }
+    h1 { font-size: 26px; }
+  }
+  /* Link back to the Late Wizard home page */
+  .home { align-self: flex-start; color: var(--dust); text-decoration: none; font-size: 13px; }
+  .home:hover { color: var(--torch); }
+</style>
+
+<div class="app">
+  <a class="home" href="/">&larr; Late Wizard</a>
+  <header>
+    <h1>EricVenture</h1>
+    <div class="status" id="status">A dungeon of fifteen rooms</div>
+  </header>
+
+  <div id="log" aria-live="polite"></div>
+
+  <form id="form" autocomplete="off">
+    <input id="cmd" aria-label="Command" placeholder="What will you do?" autocapitalize="none" spellcheck="false" disabled>
+    <button type="submit" class="primary" id="go" disabled>Go</button>
+  </form>
+
+  <div class="chips" id="chips">
+    <button type="button" class="dir" data-cmd="n" title="North">N</button>
+    <button type="button" class="dir" data-cmd="s" title="South">S</button>
+    <button type="button" class="dir" data-cmd="w" title="West">W</button>
+    <button type="button" class="dir" data-cmd="e" title="East">E</button>
+    <span class="sep" aria-hidden="true"></span>
+    <button type="button" data-fill="take ">Take…</button>
+    <button type="button" data-fill="use ">Use…</button>
+    <button type="button" data-fill="examine ">Examine…</button>
+    <span class="sep" aria-hidden="true"></span>
+    <button type="button" data-cmd="look">Look</button>
+    <button type="button" data-cmd="inventory">Inventory</button>
+    <button type="button" data-cmd="health">Health</button>
+    <button type="button" data-cmd="help">Help</button>
+    <button type="button" data-cmd="quit">Quit</button>
+  </div>
+  <p class="hint">Words in CAPS can be taken or used. Quitting saves your progress in this browser.</p>
+</div>
+
+<script>
+// ---------------------------------------------------------------------------
+// Game data (from items.json, rooms.json, map.json, messages.py)
+// ---------------------------------------------------------------------------
+const ITEMS_JSON = {"torch":{"type":"Light","name":"Torch","inventory_name":"An Unlit Torch","lit_inventory_name":"A Lit Torch","description":"A sturdy wooden torch wrapped in oily rags at one end. It's cold, dark, and looks rather sorry for itself.","lit_description":"The torch crackles cheerfully, throwing warm light in every direction and making the shadows scurry away like startled mice.","item_in_room":"An unlit TORCH leans against the wall, cold and forgotten.","use_success":"You hold the torch to the fire, and the oily rags catch with a greedy whoosh. The shadows retreat to the corners, sulking, and for the first time since you woke up, the dungeon has to look you in the eye.","use_no_fire":"You wave the torch around hopefully, but there's nothing here to light it with. Torches, sadly, do not ignite on optimism.","use_already_lit":"The torch is already blazing merrily. Any more fire and you'd be the one in need of rescue.","use_extinguish":"The mist rolls over you like a wet dog shaking itself off, and your torch dies with a pathetic hiss. You are now holding a damp stick in the dark, which is nobody's idea of a heroic look.","use_room":"R3"},"mutton":{"type":"Food","name":"Mutton","inventory_name":"A Raw Leg of Mutton","cooked_inventory_name":"A Cooked Leg of Mutton","description":"A cold, slippery leg of raw mutton. It smells faintly of sheep and strongly of bad decisions.","cooked_description":"A sizzling leg of roasted mutton, crispy on the outside and juicy on the inside. Your stomach growls approvingly.","item_in_room":"A raw leg of MUTTON hangs from a hook, pale, cold, and not the least bit appetizing in its current state.","use_cook":"You hold the mutton over the fire, and it soon hisses and spits as the fat crackles and the edges crisp. The smell that fills the chamber is so rich that your stomach starts negotiating on your behalf.","use_eat_raw":"You bite into the cold, clammy mutton, and every instinct your ancestors ever developed screams in unison. Your stomach lodges a protest that will likely be heard for the next several rooms.","use_eat":"You tear into the roasted mutton, and it's crisp, smoky, and juicy enough to make you briefly forgive the dungeon for everything. Strength returns to your limbs, along with the kind of deep satisfaction usually reserved for kings at feasts.","cookable":true,"use_room":"R3"},"apple":{"type":"Food","name":"Apple","inventory_name":"A Juicy Apple","description":"A shiny red apple, crisp and perfect. How it stays this fresh in a dungeon is a mystery best left unsolved.","item_in_room":"A shiny red APPLE sits perfectly balanced on a ledge, looking suspiciously fresh for a place like this.","use_eat":"You crunch into the apple, and it is unreasonably perfect: crisp, sweet, and entirely too fresh for a place that smells like this. You decide this is one mystery best left unexamined."},"key":{"type":"Usable","name":"Key","inventory_name":"An Ancient Key","description":"A heavy brass key, slightly dented from its tumble down the chute. Somewhere, a door is missing it terribly.","item_in_room":"A brass KEY glints among the clutter, probably shaken loose from the pocket of some unlucky guard who took the chute a little too fast.","use_success":"The key turns with a heavy clunk, and the door swings open, its smugness evaporating along with its secrets. Somewhere, a guard is about to have a very awkward conversation about a missing key.","use_wrong_room":"You jab the key hopefully at the nearest wall, but no keyhole presents itself. Keys, it turns out, are rather particular about where they're used.","use_old_room":"You aim the key at the door, which is already standing wide open. It regards you with the quiet pity reserved for people who knock on open doors.","use_room":"R5","new_room":"R5a"},"sword":{"type":"Usable","name":"Sword","inventory_name":"A Legendary Sword","description":"A gleaming blade engraved \"Wyrmsbane the Magnificent, Doom of Dragons and Terror of the Deep.\" A few stubborn flecks of dried soap still cling to its edge.","item_in_room":"Leaning among the mops is a SWORD whose blade is engraved \"Wyrmsbane the Magnificent, Doom of Dragons and Terror of the Deep,\" though the dried soap suds caked along its edge suggest it has lately been terrorizing nothing worse than sticky floors.","use_success":"You raise the sword, and the torchlight dances across the name engraved on its blade. The dragon squints, reads \"Wyrmsbane the Magnificent, Doom of Dragons,\" goes pale beneath its scales, and departs with a speed and lack of dignity you'd never have thought possible for something that size.","use_wrong_room":"You give the sword a few dramatic swings and successfully defeat a good deal of empty air. The blade seems faintly embarrassed for you.","use_old_room":"You brandish the sword at the empty lair, but there's nothing left to terrify except a few scattered scales and a lingering smell of singed pride. Wyrmsbane has already done its work here, and frankly it seems a little smug about it.","use_room":"R9","new_room":"R9a"},"blindfold":{"type":"Usable","name":"Blindfold","inventory_name":"A Grimy Blindfold","description":"A frayed strip of dark cloth, slightly sweaty and very well-worn. Whoever owned it spent a lot of time not seeing things.","item_in_room":"A frayed BLINDFOLD hangs from the dummy's shoulder, sweat-stained and abandoned.","use_put_on_mirror_room":"You tie the blindfold over your eyes, and the dizzying swarm of reflections vanishes. Without a hundred smirking copies of yourself to distract you, the way forward suddenly feels obvious.","use_put_on_elsewhere":"You tie the blindfold over your eyes and are rewarded with exactly what you'd expect: darkness, a mild smell of someone else's sweat, and a growing sense of foolishness.","use_take_off_mirror_room":"You reach for the blindfold, but the thought of a hundred smirking reflections swarming back into view stops your hand. You'll keep it on until you're safely out of this room.","use_take_off_elsewhere":"You pull off the blindfold and blink as the world rushes back in. It is, regrettably, the same dungeon as before.","use_room":"R4"},"gem":{"type":"Item","name":"Gem","inventory_name":"A Wondrous Gem","description":"A fist-sized gem that glows with a deep red fire, warm to the touch and impossibly beautiful. It's easily worth more than this whole dungeon.","item_in_room":"Atop the tallest pile rests a GEM the size of your fist, glowing with a deep red fire as though it has been waiting just for you.","use_success":"You hold the gem up and turn it slowly, watching red light spill across the walls. It does nothing useful whatsoever, but you feel enormously rich, which is close enough."},"cot":{"type":"RoomItem","name":"Cot","use_success":"You collapse onto the lumpy cot, and despite the springs jabbing you in places springs have no business being, you sleep like the dead, minus the inconvenient part. You wake rested, refreshed, and only mildly concerned about what might have crawled across you during the night."},"wizard":{"type":"RoomItem","name":"Wizard","use_success":"The wizard presses his face to the bars, clears his throat, and announces:","use_silent":"The wizard waves you off, muttering that he's been talking to himself for three centuries and is frankly out of fresh material. He turns his back to you with the wounded dignity only a very small, very caged man can muster.","use_sayings":["Raw mutton? Disgusting. A proper wizard always cooks his meat first.","Mirrors lie, you know. Sometimes the best way to see is not to look at all.","That dragon is a terrible bully but a dreadful coward. And, oddly, a very good reader.","Water and fire do not get along. Neither do I and this birdcage.","Guards are always losing things. Usually right after they fall down something.","Tired? There's a perfectly lumpy cot not far from here. Lovely, really.","I'd turn you into a toad for staring, but my magic's gone soggy. Count yourself lucky.","They say I talk too much. That's why they put me in here. Isn't that rude? Don't answer, I'm not finished.","I have been in this cage for three hundred years. The first two hundred were the worst.","If you see a little pointy hat lying about, it's mine. I'd like it back, along with my dignity."]},"dragon":{"type":"RoomItem","name":"Dragon","use_success":"The dragon regards you the way you might regard a slightly ambitious sandwich. A warning puff of smoke singes your eyebrows, and you're forced to conclude that, without something considerably more persuasive in hand, this conversation is over."}};
+const ROOMS_JSON = {"R1":{"name":"JAIL CELL","description":"You are in a cramped stone cell where the air smells like wet socks and old regrets. Someone has left the cell door hanging open, either out of kindness or because they simply forgot you were here.","visited_description":"Your old cell, still damp and still smelling of socks. The door hangs open.","exits":["e"],"dark":false,"items":[]},"R2":{"name":"GUARD ROOM","description":"A small, chilly room with an empty stool and the lingering smell of a guard who left in a hurry. Pale moonlight leaks through a high barred window, making the shadows look like they're eavesdropping.","visited_description":"The guard room, quiet and moonlit. The guard still hasn't come back.","exits":["n","w","e"],"dark":false,"items":["torch"]},"R3":{"name":"FEAST CHAMBER","description":"A cramped stone chamber with a ceiling so low you instinctively duck, lit by a crackling fire that pops and hisses like it's telling secrets to the smoke. Gnawed bones and greasy scraps litter the ring of sitting stones, and judging by the size of the teeth marks, whoever feasts here isn't picky about what's on the menu.","visited_description":"The grimy feast chamber, fire still crackling among the gnawed bones.","exits":["n","s","e"],"dark":false,"items":[]},"R4":{"name":"HALL OF MIRRORS","description":"Your torchlight bursts into a thousand flickering copies, bouncing between mirrors that stretch in every direction until you can't tell which way is forward. A hundred versions of you stare back, and a few of them seem to be smirking.","visited_description":"The dizzying hall of mirrors, full of torchlit reflections and far too many of you.","exits":["n","s","w","e"],"dark":true,"items":[]},"R5":{"name":"DUSTY CORRIDOR","description":"Your torchlight crawls along a plain stone corridor so unremarkable it almost seems to be trying not to be noticed. Halfway down, a sturdy wooden door sits firmly locked, looking smug about whatever it's hiding.","visited_description":"The plain, dusty corridor, with its stubbornly locked door.","exits":["n","e"],"dark":true,"items":[]},"R5a":{"name":"DUSTY CORRIDOR","description":"The plain stone corridor doesn't seem quite so unremarkable anymore, now that it has finally given up one of its secrets. The door on the south wall, which you so cleverly unlocked, stands open and ready for you.","visited_description":"The dusty corridor, with the south door you unlocked now standing open.","exits":["n","s","e"],"dark":true,"items":[]},"R6":{"name":"QUIET ALCOVE","description":"A snug little alcove tucked just off the corridor, where an old COT sits against the wall beneath a lumpy but surprisingly inviting blanket. The air is still and calm here, as if even the dungeon itself has agreed to leave you alone for a while.","visited_description":"The quiet alcove with its lumpy COT, as peaceful as ever.","exits":["s","e"],"dark":true,"items":["cot"]},"R7":{"name":"WIZARD'S CELL","description":"Your torchlight falls on a rusty birdcage hanging from the ceiling, where a WIZARD no taller than a teacup sits with his beard tucked into his belt and his tiny staff fizzling out like a damp firework. He clears his throat loudly and peers at you expectantly, clearly bursting to tell someone, anyone, what's on his mind.","visited_description":"The wizard's cell, where the teacup-sized WIZARD still peers from his birdcage, eager for a chat.","exits":["n","w","e"],"dark":true,"items":["wizard"]},"R8":{"name":"TRAINING ROOM","description":"A straw-stuffed practice dummy slumps in the corner, so covered in slashes and dents that it looks like it has lost every fight it's ever been in. Scuff marks swirl across the floor in wild circles, and to the south, a steep stone chute drops away into the dark, far too slick to ever climb back up.","visited_description":"The scuffed training room, where the battered dummy is still losing and the south chute still yawns.","exits":["n","s","w"],"dark":true,"items":["blindfold"]},"R9":{"name":"DRAGON'S LAIR","description":"Your torchlight glints off a mountain of dark scales, where an enormous DRAGON lies curled across the northern archway, smoke curling lazily from its nostrils with every rumbling breath. One great golden eye slides open to watch you, unbothered by the paths to the south and west, but making it very clear that nobody goes north without its permission.","visited_description":"The DRAGON's lair, where the great beast still guards the northern archway with one watchful eye.","exits":["s","w"],"dark":true,"items":["dragon"]},"R9a":{"name":"DRAGON'S LAIR","description":"The lair is empty now, save for a few scattered scales and a long scorch mark where the dragon scrambled away in terror the moment it read the name engraved on your blade. The northern archway stands unguarded at last, and somewhere far off you can still hear the faint, embarrassed whimpering of a very large beast.","visited_description":"The abandoned dragon's lair, with the northern archway open and unguarded.","exits":["n","s","w"],"dark":true,"items":[]},"R10":{"name":"TREASURE ROOM","description":"Mountains of gold coins, jeweled goblets, and tarnished crowns spill across the floor, glittering in the warm daylight that pours through a great iron gate standing wide open to the north. Beyond it lies the world outside, and the fresh air drifting in smells almost too good to be true.","visited_description":"The glittering treasure room, with daylight still streaming through the open gate to the north.","exits":["n","s"],"dark":false,"items":["gem"]},"R11":{"name":"ECHOING PASSAGE","description":"A long, twisting passage lit by patches of glowing green moss, where every footstep echoes back a moment too late, as if something just behind you is copying your every move. At one end, a closed iron portcullis stands with a smooth, lever-less face, hinting that whatever lies beyond can only be reached some other way.","visited_description":"The moss-lit echoing passage, where your footsteps still can't keep their own pace.","exits":["w"],"dark":false,"items":["apple"]},"R12":{"name":"LANDING PIT","description":"A small stone pit sits at the bottom of the chute, littered with scraps of cloth, lost buttons, and other odds and ends that clearly didn't make the trip gracefully either. The chute's slick mouth gleams far out of reach above, and the only other way out is an iron portcullis with a rusty lever on this side and nothing at all on the other.","visited_description":"The cluttered landing pit, with the chute far above and the one-sided portcullis waiting.","exits":["w"],"dark":true,"items":["key"]},"R13":{"name":"WATERFALL GROTTO","description":"A curtain of water thunders down from a crack in the ceiling, splashing into a churning pool that glows with an eerie blue light from somewhere deep beneath the surface. Cold mist hangs heavy in the air, soaking everything it touches and making the walls glisten like they're sweating.","visited_description":"The misty waterfall grotto, still roaring and glowing blue.","exits":["s","w","e"],"dark":false,"items":[]},"R14":{"name":"COLD LARDER","description":"A chilly little storeroom lined with empty meat hooks that sway ever so slightly, though there's no breeze to move them. The air smells of salt and old stew, and dark stains on the stone floor suggest this room has seen plenty of dinners come and go.","visited_description":"The chilly larder, its empty hooks still swaying.","exits":["s","w"],"dark":true,"items":["mutton"]},"R15":{"name":"UTILITY CLOSET","description":"A cramped closet crammed with mops, dented buckets, and a crate labeled \"Lost and Found (Mostly Lost)\" in tired handwriting. It smells of soap and damp rags, and it is, without question, the least heroic place you've ever stood.","visited_description":"The drab utility closet, still smelling of soap and lost causes.","exits":["n"],"dark":true,"items":["sword"]}};
+const MAP_JSON = {"(1, 1)":"R1","(2, 1)":"R2","(3, 1)":"R11","(4, 1)":"R12","(1, 2)":"R15","(2, 2)":"R3","(3, 2)":"R7","(4, 2)":"R8","(1, 3)":"R5","(2, 3)":"R4","(3, 3)":"R13","(4, 3)":"R9","(1, 4)":"R6","(2, 4)":"R14","(4, 4)":"R10"};
+const Z = {
+"TITLE": [
+"",
+"EricVenture",
+""
+],
+"LOAD_GAME": "Continue your previous adventure?",
+"NO_LOAD_GAME": "Press any key to begin...",
+"START_GAME": "You wake on a cold stone floor with a pounding headache and absolutely no memory of how you got here. The last thing you remember is a strange feast, a suspiciously sweet drink, and someone laughing far too loudly. Now there are bars, damp walls, and the uneasy feeling that whoever put you here will be very disappointed to find you gone.",
+"RESUME_GAME": "You experience a sudden, irresistible feeling of deja vu...",
+"WIN_WITH_GEM": "You stride through the gate and into the sunlight, the great red GEM blazing in your hand like a captured sunset. Behind you, the dungeon lets out a long, defeated sigh, and somewhere a very large dragon is still whimpering. You are, without a doubt, a legend.",
+"WIN_NO_GEM": "You step out into the sunlight, blinking, with absolutely nothing to show for your troubles. Somewhere behind you, a fist-sized gem glows in the treasure room, wondering what it ever did to deserve being ignored. Congratulations, you have escaped. Your bards will have a very short song to sing.",
+"QUIT": "You sit down on the cold stone floor and decide that the dungeon can keep you. Perhaps another adventurer will have better luck. (Your progress has been saved.)",
+"HELP_ONE_TITLE": [
+"One Word Commands",
+"-----------------"
+],
+"HELP_ONE_INFO": [
+"HELP - Display this information",
+"LOOK - Look at your surroundings again",
+"INVENTORY - List the items you have taken",
+"HEALTH - Show how hungry and tired you are",
+"QUIT - Save your progress and leave the dungeon",
+"N/S/E/W (or spelled out) - Move in that direction"
+],
+"HELP_TWO_TITLE": [
+"Two Word Commands",
+"-----------------"
+],
+"HELP_TWO_INFO": [
+"TAKE (item) - Pick up an item at your location.",
+"EXAMINE (item) - Look closely at an item in your inventory",
+"USE (item) - Do something useful with an item in your inventory or in the room (i.e. eat it, swing it, cook it, talk to it, etc.)",
+"Note: Items you can interact with are shown in ALL CAPS"
+],
+"DEATH_BY_HUNGER": "Your stomach files one final, formal complaint, and you crumple to the floor, dreaming of roasted mutton you'll never taste. Future adventurers will find your remains and assume, correctly, that you forgot to eat.  YOU HAVE DIED.",
+"DEATH_BY_FATIGUE": "Your eyelids win the argument at last, and you slump against the cold stone for a nap that turns out to be somewhat more permanent than planned. There was a perfectly good cot just down the corridor, but you clearly had other priorities.  YOU HAVE DIED.",
+"HEALTH_STATES": [
+"Hunger gnaws at you relentlessly, and even the gnawed bones in the Feast Chamber are starting to look like a reasonable option.",
+"Your stomach grumbles a pointed reminder that it has needs too, and that it is keeping score.",
+"Your stomach is quiet and content, at least for now."
+],
+"STAMINA_STATES": [
+"Your eyelids droop and your thoughts wander, and the cold stone floor is starting to look dangerously comfortable.",
+"Your legs are getting heavy, and every corridor seems to stretch a little longer than it did before.",
+"You feel alert and steady, ready for whatever the dungeon throws at you next."
+],
+"TOO_FULL": "You eye the food and your stomach politely declines on your behalf. You're far too full to manage another bite right now.",
+"NOT_TIRED": "You lie down on the cot and stare at the ceiling, wide awake and increasingly aware of the springs. You're simply not tired enough to sleep.",
+"DARK_ROOM_NAME": "A VERY DARK ROOM",
+"DARK_ROOM_DESCRIPTION": "You peer into the darkness, but the darkness peers right back. Shapes shift just beyond your reach, and every suspicious sound seems to be getting closer. Whatever this room contains, you're fairly certain you'd rather face it with a torch.",
+"BLINDFOLD_ROOM_NAME": "THE INSIDE OF A BLINDFOLD",
+"BLINDFOLD_ROOM_DESCRIPTION": "You can see nothing at all, which is precisely the point, though it's hard to feel clever about it while shuffling around with your hands out like a sleepwalker. Something smells damp. Something else smells worse.",
+"EXIT_TEXT_MANY": "Exits lead to the",
+"EXIT_TEXT_ONE": "The sole exit leads to the",
+"PLAYER_INPUT": "What will you do? ",
+"DARK_ACTION_BLOCKED": "You reach out to do something, then think better of it. Whatever you're trying to accomplish, doing it blind in the dark seems like an excellent way to make things worse.",
+"RELOOK": "You spend a moment to take in your surroundings once more.",
+"NO_EXIT": "You walk confidently into solid stone. The wall wins.",
+"DARK_STUMBLE": "You fumble blindly through the darkness, stubbing your toes on things you'd rather not identify. You manage to keep moving, but you can't see a thing.",
+"MOVE_SUCCESS": "You head {direction}, your footsteps echoing through the dungeon.",
+"MIRRORS_SCRAMBLE": "A hundred reflections lurch in a hundred directions at once, and you stagger after the one that looks most sure of itself. By the time the dizziness fades, you have no idea which way you actually went.",
+"TAKE_ITEM": "You pick up the {item} and tuck it away, feeling slightly more prepared for whatever comes next.",
+"EMPTY_INVENTORY": "You rummage through your belongings, only to discover that your belongings appear to have gone somewhere without you.",
+"INVENTORY": "INVENTORY",
+"EXAMINE_NO_ITEM": "You pat yourself down, check your pockets, and come up empty. Hard to examine something you don't actually have.",
+"ERROR_TAKE": "You search high and low, but there's no {item} here. Wishful thinking, it turns out, is not an inventory system.",
+"ERROR_TAKE_ROOM_ITEM": "You give the {item} an experimental tug and quickly conclude that it is not coming with you. Perhaps, instead of trying to carry it off, you could simply make USE of it where it stands.",
+"ERROR_USE": "You search your pockets looking for the {item} and find nothing but lint and a vague sense of unpreparedness.",
+"ERROR_USE_ROOM": "You look around for the {item}, but it is stubbornly not here. Perhaps it's in another room, minding its own business.",
+"ERROR_WORDCOUNT": "Please enter only 1 or 2 words. (Type HELP for more info)",
+"ERROR_UNKNOWN": "You mutter something that even you don't quite understand. Try something a little more sensible. (Type HELP for more info)",
+"MISSING_NOUN": "You seem to have forgotten the most important part: what, exactly, are you trying to {verb}?",
+"UNEXPECTED_NOUN": "That command '{verb} {noun}' stands on its own. Just enter '{verb}' by itself."
+};
+
+// ---------------------------------------------------------------------------
+// constants.py
+// ---------------------------------------------------------------------------
+const Action = Object.freeze({ CONTINUE: "CONTINUE", DISPLAY_ROOM: "DISPLAY_ROOM", END_GAME: "END_GAME" });
+const C = {
+  WIN_X: 4, WIN_Y: 5,
+  HEALTH: "health", STAMINA: "stamina",
+  STARTING_HEALTH: 13, STARTING_STAMINA: 16,
+  HEALTH_LEVEL: [1, 4, 8], STAMINA_LEVEL: [1, 5, 10],
+  DECLINE: "decline", RECOVER: "recover",
+  MAX_HEALTH_LEVEL: 3, MAX_STAMINA_LEVEL: 3,
+  HALL_OF_MIRRORS: "R4", WATERFALL: "R13",
+  BLINDFOLD: "blindfold", TORCH: "torch", COT: "cot", DRAGON: "dragon", WIZARD: "wizard",
+};
+const MOVEMENT = ["north", "south", "west", "east", "n", "s", "w", "e"];
+const VERBS = ["examine", "inventory", "quit", "help", "take", "use", "look", "health", ...MOVEMENT];
+const SOLO_VERBS = ["inventory", "quit", "help", "look", "health", ...MOVEMENT];
+const DUO_VERBS = ["take", "use", "examine"];
+const DARKNESS_VERBS = ["use", "quit", "help", "health", ...MOVEMENT];
+const MOVES = { n: [0, 1], s: [0, -1], e: [1, 0], w: [-1, 0] };
+const DIRECTION_NAMES = { n: "north", s: "south", w: "west", e: "east" };
+const SAVE_KEY = "ericventure-save-v1";
+let UI_WIDTH = 50;
+
+// Python's bisect.bisect (bisect_right): how many thresholds are <= x
+function bisect(levels, x) {
+  let i = 0;
+  while (i < levels.length && levels[i] <= x) i++;
+  return i;
+}
+
+// ---------------------------------------------------------------------------
+// world.py
+// ---------------------------------------------------------------------------
+class Room {
+  constructor(roomId, d) {
+    this.room_id = roomId;
+    this.name = d.name;
+    this.description = d.description;
+    this.visited_description = d.visited_description;
+    this.visited = d.visited ?? false;
+    this.exits = [...d.exits];
+    this.dark = d.dark;
+    this.items = [...(d.items ?? [])];
+  }
+  toDict() {
+    return {
+      name: this.name, description: this.description,
+      visited_description: this.visited_description, visited: this.visited,
+      exits: this.exits, dark: this.dark,
+      items: this.items.map(item => item.item_id),
+    };
+  }
+}
+
+class GameMap {
+  constructor(layout) { this.layout = { ...layout }; }
+  roomAt(x, y) { return this.layout[`(${x}, ${y})`] ?? null; }
+  replace(oldId, newId) {
+    for (const coords of Object.keys(this.layout)) {
+      if (this.layout[coords] === oldId) this.layout[coords] = newId;
+    }
+  }
+  toDict() { return { ...this.layout }; }
+}
+
+class Item {
+  static TYPE = "Item";
+  constructor(itemId, d) {
+    this.item_id = itemId;
+    this.name = d.name;
+    this.inventory_name = d.inventory_name ?? "";
+    this.description = d.description ?? "";
+    this.item_in_room = d.item_in_room ?? "";
+    this.use_success = d.use_success ?? "";
+    this.use_room = d.use_room ?? "";
+  }
+  // Generic version of each Python to_dict(): every attribute except the ID
+  toDict() {
+    const data = { type: this.constructor.TYPE };
+    for (const [key, value] of Object.entries(this)) {
+      if (key !== "item_id") data[key] = value;
+    }
+    return data;
+  }
+  use(hero, thisRoom, gameMap) { return [this.use_success, Action.CONTINUE]; }
+  inventoryText() { return this.inventory_name; }
+  examineText() { return this.description; }
+}
+
+class Food extends Item {
+  static TYPE = "Food";
+  constructor(itemId, d) {
+    super(itemId, d);
+    this.cooked_inventory_name = d.cooked_inventory_name ?? "";
+    this.cooked_description = d.cooked_description ?? "";
+    this.use_cook = d.use_cook ?? "";
+    this.use_eat_raw = d.use_eat_raw ?? "";
+    this.use_eat = d.use_eat ?? "";
+    this.cooked = d.cooked ?? false;
+    this.cookable = d.cookable ?? false;
+  }
+  inventoryText() { return this.cooked ? this.cooked_inventory_name : this.inventory_name; }
+  examineText() { return this.cooked ? this.cooked_description : this.description; }
+  use(hero, thisRoom, gameMap) {
+    // Cook it if raw and in right place
+    if (this.cookable && !this.cooked && thisRoom.room_id === this.use_room) {
+      this.cooked = true;
+      return [this.use_cook, Action.CONTINUE];
+    }
+    // Don't eat if not hungry
+    if (hero.isFull()) return [Z.TOO_FULL, Action.CONTINUE];
+
+    let message;
+    if (!this.cookable || this.cooked) {          // Eat it ... cooked
+      hero.wellness(C.HEALTH, C.RECOVER);
+      message = this.use_eat;
+    } else {                                      // Eat it ... raw and wriggling
+      message = this.use_eat_raw;
+    }
+    hero.items.splice(hero.items.indexOf(this), 1);
+    return [message, Action.CONTINUE];
+  }
+}
+
+class Light extends Item {
+  static TYPE = "Light";
+  constructor(itemId, d) {
+    super(itemId, d);
+    this.lit_inventory_name = d.lit_inventory_name;
+    this.lit_description = d.lit_description;
+    this.use_no_fire = d.use_no_fire;
+    this.use_already_lit = d.use_already_lit;
+    this.use_extinguish = d.use_extinguish;
+    this.lit = d.lit ?? false;
+  }
+  inventoryText() { return this.lit ? this.lit_inventory_name : this.inventory_name; }
+  examineText() { return this.lit ? this.lit_description : this.description; }
+  use(hero, thisRoom, gameMap) {
+    let message;
+    if (this.lit) {
+      message = this.use_already_lit;
+    } else if (thisRoom.room_id === this.use_room) {
+      this.lit = true;
+      message = this.use_success;
+    } else {
+      message = this.use_no_fire;
+    }
+    return [message, Action.CONTINUE];
+  }
+}
+
+class Usable extends Item {
+  static TYPE = "Usable";
+  constructor(itemId, d) {
+    super(itemId, d);
+    this.new_room = d.new_room ?? "";
+    this.use_wrong_room = d.use_wrong_room ?? "";
+    this.use_old_room = d.use_old_room ?? "";
+    this.use_put_on_mirror_room = d.use_put_on_mirror_room ?? "";
+    this.use_put_on_elsewhere = d.use_put_on_elsewhere ?? "";
+    this.use_take_off_mirror_room = d.use_take_off_mirror_room ?? "";
+    this.use_take_off_elsewhere = d.use_take_off_elsewhere ?? "";
+  }
+  use(hero, thisRoom, gameMap) {
+    const thisRoomId = thisRoom.room_id;
+    let message, action;
+
+    // Deal with blindfold special case
+    if (this.name.toLowerCase() === C.BLINDFOLD) {
+      if (hero.blindfolded) {
+        // Take blindfold off ... except in Hall of Mirrors!
+        if (thisRoomId === this.use_room) {
+          message = this.use_take_off_mirror_room;
+          action = Action.CONTINUE;
+        } else {
+          hero.blindfolded = false;
+          message = this.use_take_off_elsewhere;
+          action = Action.DISPLAY_ROOM;
+        }
+      } else {
+        // Put on blindfold
+        hero.blindfolded = true;
+        action = Action.DISPLAY_ROOM;
+        message = thisRoomId === this.use_room ? this.use_put_on_mirror_room : this.use_put_on_elsewhere;
+      }
+    } else {
+      // Other items (sword, key) which change the room state
+      if (thisRoomId === this.use_room) {
+        gameMap.replace(thisRoomId, this.new_room);
+        message = this.use_success;
+        action = Action.DISPLAY_ROOM;
+      } else if (thisRoomId === this.new_room) {
+        message = this.use_old_room;
+        action = Action.CONTINUE;
+      } else {
+        message = this.use_wrong_room;
+        action = Action.CONTINUE;
+      }
+    }
+    return [message, action];
+  }
+}
+
+class RoomItem extends Item {
+  static TYPE = "RoomItem";
+  constructor(itemId, d) {
+    super(itemId, d);
+    this.use_silent = d.use_silent ?? "";
+    this.use_sayings = [...(d.use_sayings ?? [])];
+  }
+  use(hero, thisRoom, gameMap) {
+    let message;
+    switch (this.name.toLowerCase()) {
+      case C.COT:
+        if (hero.isRested()) {
+          message = Z.NOT_TIRED;
+        } else {
+          hero.wellness(C.STAMINA, C.RECOVER);
+          message = this.use_success;
+        }
+        break;
+      case C.WIZARD:
+        if (this.use_sayings.length) {
+          showText(this.use_success, { center: true, blank_start: 1, blank_end: 1 });
+          showText(this.use_sayings.pop(), { border: "%", center: true, top: true, sides: true, bottom: true, blank_end: 1 });
+          message = "";
+        } else {
+          message = this.use_silent;
+        }
+        break;
+      default:
+        message = this.use_success;
+    }
+    return [message, Action.CONTINUE];
+  }
+}
+
+// ---------------------------------------------------------------------------
+// player.py
+// ---------------------------------------------------------------------------
+class Player {
+  constructor(d = {}) {
+    this.x = d.x ?? 1;
+    this.y = d.y ?? 1;
+    this.items = [...(d.items ?? [])];
+    this.blindfolded = d.blindfolded ?? false;
+    this.health = d.health ?? C.STARTING_HEALTH;
+    this.stamina = d.stamina ?? C.STARTING_STAMINA;
+    // Always start with these values (never passed in, never saved)
+    this.dead = false;
+    this.escaped = false;
+  }
+  toDict() {
+    return {
+      x: this.x, y: this.y,
+      items: this.items.map(item => item.item_id),
+      blindfolded: this.blindfolded, health: this.health, stamina: this.stamina,
+    };
+  }
+  hasLight() { return this.items.some(item => item instanceof Light && item.lit); }
+  hasItem(itemId) { return this.items.some(item => item.item_id === itemId); }
+  wellness(stat = null, action = null) {
+    if (stat === C.HEALTH) {
+      if (action === C.DECLINE) this.health -= 1;
+      else if (action === C.RECOVER) this.health = C.STARTING_HEALTH;
+    } else if (stat === C.STAMINA) {
+      if (action === C.DECLINE) this.stamina -= 1;
+      else if (action === C.RECOVER) this.stamina = C.STARTING_STAMINA;
+    }
+    const healthState = bisect(C.HEALTH_LEVEL, this.health);
+    const staminaState = bisect(C.STAMINA_LEVEL, this.stamina);
+    if (!healthState || !staminaState) this.dead = true;
+    return [healthState, staminaState];
+  }
+  isFull() { return bisect(C.HEALTH_LEVEL, this.health) === C.MAX_HEALTH_LEVEL; }
+  isRested() { return bisect(C.STAMINA_LEVEL, this.stamina) === C.MAX_STAMINA_LEVEL; }
+}
+
+// ---------------------------------------------------------------------------
+// saveload.py (browser storage instead of files)
+// ---------------------------------------------------------------------------
+const ITEM_CLASSES = { Item, Food, Light, Usable, RoomItem };
+
+function loadItems(raw) {
+  const items = {};
+  for (const [itemId, data] of Object.entries(raw)) {
+    const { type, ...rest } = data;             // pick the class from "type"
+    items[itemId] = new ITEM_CLASSES[type](itemId, rest);
+  }
+  return items;
+}
+function loadRooms(raw) {
+  const rooms = {};
+  for (const [roomId, data] of Object.entries(raw)) rooms[roomId] = new Room(roomId, data);
+  return rooms;
+}
+function linkItems(rooms, items) {
+  for (const room of Object.values(rooms)) room.items = room.items.map(id => items[id]);
+}
+function readSave() {
+  try {
+    const text = localStorage.getItem(SAVE_KEY);
+    return text ? JSON.parse(text) : null;
+  } catch { return null; }
+}
+function writeSave(items, rooms, gameMap, hero) {
+  const data = {
+    items: Object.fromEntries(Object.values(items).map(i => [i.item_id, i.toDict()])),
+    rooms: Object.fromEntries(Object.values(rooms).map(r => [r.room_id, r.toDict()])),
+    map: gameMap.toDict(),
+    player: hero.toDict(),
+  };
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify(data)); return true; }
+  catch { return false; }
+}
+function deleteSave() {
+  try { localStorage.removeItem(SAVE_KEY); } catch { /* storage unavailable */ }
+}
+
+// ---------------------------------------------------------------------------
+// display.py
+// ---------------------------------------------------------------------------
+const logEl = document.getElementById("log");
+
+function wrapText(line, width) {
+  const words = line.split(/\s+/).filter(Boolean);
+  const lines = [];
+  let current = "";
+  for (const word of words) {
+    if (!current) current = word;
+    else if (current.length + 1 + word.length <= width) current += " " + word;
+    else { lines.push(current); current = word; }
+  }
+  if (current) lines.push(current);
+  return lines;
+}
+function center(text, width) {
+  const space = Math.max(0, width - text.length);
+  const left = Math.floor(space / 2);
+  return " ".repeat(left) + text + " ".repeat(space - left);
+}
+
+function showText(text, opts = {}) {
+  let { border = "*", center: isCentered = false, top = false, bottom = false, sides = false,
+        blank_start = 0, blank_end = 0, box_style = false, empty_line = false, full_box = false } = opts;
+  const lines = Array.isArray(text) ? text : [text];
+  const originalBorder = border;
+  let topBottom = border.repeat(UI_WIDTH);
+
+  if (full_box) {
+    top = bottom = sides = isCentered = box_style = true;
+    blank_start = 1; blank_end = 1;
+  }
+  if (box_style) {
+    border = "|";
+    topBottom = "+" + "-".repeat(UI_WIDTH - 2) + "+";
+  }
+  if (empty_line) sides = true;
+
+  const s1 = sides ? border + " " : "";
+  const s2 = sides ? " " + border : "";
+  const textWidth = UI_WIDTH - s1.length - s2.length;
+
+  const t = [];
+  for (let k = 0; k < Number(blank_start); k++) t.push("");
+  if (top) t.push(topBottom);
+  for (const line of lines) {
+    if (line === "") {
+      t.push(s1 + " ".repeat(textWidth) + s2);
+    } else {
+      for (const sub of wrapText(line, textWidth)) {
+        t.push(s1 + (isCentered ? center(sub, textWidth) : sub.padEnd(textWidth)) + s2);
+      }
+    }
+  }
+  if (bottom) t.push(topBottom);
+  for (let k = 0; k < Number(blank_end); k++) t.push("");
+
+  const kind = { "#": "b-dread", o: "b-win", "%": "b-wizard", "*": "b-room", " ": "b-plain" }[originalBorder];
+  const el = document.createElement("pre");
+  el.className = "block " + (box_style ? "b-box" : kind || "b-room");
+  el.textContent = t.join("\n");
+  appendToLog(el);
+  return el;
+}
+
+function appendToLog(el) {
+  logEl.appendChild(el);
+  while (logEl.childElementCount > 500) logEl.firstElementChild.remove();
+}
+
+// Scroll so the newest output starts at the top of the log (keeps room names in view)
+function revealFrom(el) {
+  logEl.scrollTop = Math.max(0, el.offsetTop - 8);
+}
+
+function showRoom(hero, thisRoom, dark) {
+  let roomName, roomDescription;
+  if (hero.blindfolded) {
+    roomName = Z.BLINDFOLD_ROOM_NAME;
+    roomDescription = Z.BLINDFOLD_ROOM_DESCRIPTION;
+  } else if (dark) {
+    roomName = Z.DARK_ROOM_NAME;
+    roomDescription = Z.DARK_ROOM_DESCRIPTION;
+  } else {
+    roomName = thisRoom.name;
+    if (thisRoom.visited) {
+      roomDescription = thisRoom.visited_description;
+    } else {
+      roomDescription = thisRoom.description;
+      thisRoom.visited = true;
+    }
+  }
+
+  let exitText = thisRoom.exits.length === 1 ? Z.EXIT_TEXT_ONE : Z.EXIT_TEXT_MANY;
+  exitText += " " + thisRoom.exits.map(d => DIRECTION_NAMES[d]).join(", ") + ".";
+
+  const itemText = [];
+  if (!dark && !hero.blindfolded) {
+    for (const item of thisRoom.items) {
+      if (!(item instanceof RoomItem)) itemText.push(item.item_in_room);
+    }
+  }
+
+  const [healthState, staminaState] = hero.wellness();
+  if (hero.dead) return;  // Avoid out of range error
+
+  showText(roomName, { top: true, sides: true, center: true, blank_start: 2 });
+  showText("", { empty_line: true });
+  showText(roomDescription, { sides: true });
+  showText("", { empty_line: true });
+  for (const text of itemText) {
+    showText(text, { sides: true });
+    showText("", { empty_line: true });
+  }
+  if (healthState === 1) {
+    showText(Z.HEALTH_STATES[0], { sides: true });
+    showText("", { empty_line: true });
+  }
+  if (staminaState === 1) {
+    showText(Z.STAMINA_STATES[0], { sides: true });
+    showText("", { empty_line: true });
+  }
+  showText(exitText, { bottom: true, sides: true, blank_end: 1 });
+}
+
+// ---------------------------------------------------------------------------
+// input.py
+// ---------------------------------------------------------------------------
+function validateInput(raw) {
+  const action = raw.toLowerCase().split(/\s+/).filter(Boolean);
+  let errmsg;
+  if (!action.length || action.length > 2) {
+    errmsg = Z.ERROR_WORDCOUNT;
+  } else {
+    const verb = action[0];
+    const noun = action.length === 2 ? action[1] : null;
+    if (!VERBS.includes(verb)) errmsg = Z.ERROR_UNKNOWN;
+    else return [verb, noun];
+  }
+  showText(errmsg, { sides: true, border: " ", blank_start: 1, blank_end: 1 });
+  return null;
+}
+
+const fmt = (template, values) => template.replace(/\{(\w+)\}/g, (_, key) => values[key]);
+
+function processInput(verb, noun, dark, thisRoom, hero, items, gameMap) {
+  // If no noun, make sure that verb can be used solo
+  if (noun === null && !SOLO_VERBS.includes(verb)) return fmt(Z.MISSING_NOUN, { verb });
+  // If there is a noun, make sure the verb accepts one
+  if (noun && !DUO_VERBS.includes(verb)) return fmt(Z.UNEXPECTED_NOUN, { verb, noun });
+  // Check for darkness
+  if ((dark || hero.blindfolded) && !DARKNESS_VERBS.includes(verb)) return Z.DARK_ACTION_BLOCKED;
+
+  if (verb === "quit") return Action.END_GAME;
+
+  if (verb === "look") {
+    thisRoom.visited = false;
+    showText(Z.RELOOK, { full_box: true });
+    return Action.DISPLAY_ROOM;
+  }
+
+  if (MOVEMENT.includes(verb)) {
+    let move = verb[0];
+    let moveMsg = "";
+    if (!thisRoom.exits.includes(move)) {
+      showText(Z.NO_EXIT, { full_box: true });
+      return Action.CONTINUE;
+    }
+    // Check for mirror room and not dark and not blindfolded
+    if (thisRoom.room_id === C.HALL_OF_MIRRORS && !dark && !hero.blindfolded) {
+      move = "nsew"[Math.floor(Math.random() * 4)];
+      moveMsg = Z.MIRRORS_SCRAMBLE;
+    }
+    const [dx, dy] = MOVES[move];
+    hero.x += dx;
+    hero.y += dy;
+
+    // Check for escaping the dungeon!
+    if (hero.x === C.WIN_X && hero.y === C.WIN_Y) {
+      hero.escaped = true;
+      return Action.END_GAME;
+    }
+    if (moveMsg === "") {
+      moveMsg = (dark || hero.blindfolded) ? Z.DARK_STUMBLE : fmt(Z.MOVE_SUCCESS, { direction: DIRECTION_NAMES[move] });
+    }
+    showText(moveMsg, { full_box: true });
+
+    // Process hunger and tiredness
+    hero.wellness(C.HEALTH, C.DECLINE);
+    hero.wellness(C.STAMINA, C.DECLINE);
+    if (hero.dead) return Action.END_GAME;
+    return Action.DISPLAY_ROOM;
+  }
+
+  if (verb === "take") {
+    const item = thisRoom.items.find(i => i.name.toLowerCase() === noun) ?? null;
+    if (item === null) return fmt(Z.ERROR_TAKE, { item: noun });
+    if (item instanceof RoomItem) return fmt(Z.ERROR_TAKE_ROOM_ITEM, { item: noun });
+    hero.items.push(item);
+    thisRoom.items.splice(thisRoom.items.indexOf(item), 1);
+    showText(fmt(Z.TAKE_ITEM, { item: noun }), { full_box: true });
+    return Action.CONTINUE;
+  }
+
+  if (verb === "inventory") {
+    const inventoryList = hero.items.map(i => i.inventoryText());
+    if (!inventoryList.length) inventoryList.push(Z.EMPTY_INVENTORY);
+    showText(Z.INVENTORY, { sides: true, top: true, box_style: true, center: true, blank_start: 1 });
+    showText("-".repeat(Z.INVENTORY.length), { sides: true, box_style: true, center: true });
+    inventoryList.forEach((invItem, n) => {
+      const last = n === inventoryList.length - 1;
+      showText(invItem, { sides: true, box_style: true, center: true, bottom: last, blank_end: last ? 1 : 0 });
+    });
+    return Action.CONTINUE;
+  }
+
+  if (verb === "examine") {
+    const item = hero.items.find(i => i.name.toLowerCase() === noun);
+    if (item) {
+      showText(item.examineText(), { full_box: true });
+      return Action.CONTINUE;
+    }
+    return Z.EXAMINE_NO_ITEM;
+  }
+
+  if (verb === "help") {
+    showText(Z.HELP_ONE_TITLE, { top: true, sides: true, center: true, box_style: true, blank_start: 1 });
+    showText(Z.HELP_ONE_INFO, { sides: true, box_style: true });
+    showText(Z.HELP_TWO_TITLE, { top: true, sides: true, center: true, box_style: true });
+    showText(Z.HELP_TWO_INFO, { sides: true, bottom: true, box_style: true, blank_end: 1 });
+    return Action.CONTINUE;
+  }
+
+  if (verb === "health") {
+    const [healthState, staminaState] = hero.wellness();
+    showText(Z.HEALTH_STATES[healthState - 1], { top: true, sides: true, box_style: true, blank_start: 1 });
+    showText("", { empty_line: true, box_style: true });
+    showText(Z.STAMINA_STATES[staminaState - 1], { bottom: true, sides: true, box_style: true, blank_end: 1 });
+    return Action.CONTINUE;
+  }
+
+  if (verb === "use") {
+    let item = hero.items.find(i => i.name.toLowerCase() === noun) ?? null;
+    // Check if player is trying to use an item from the room
+    if (item === null) {
+      item = thisRoom.items.find(i => i.name.toLowerCase() === noun && i instanceof RoomItem) ?? null;
+    }
+    if (item === null) {
+      // Check to see if it is a room item (elsewhere)
+      const elsewhere = Object.values(items).some(o => o.name.toLowerCase() === noun && o instanceof RoomItem);
+      return fmt(elsewhere ? Z.ERROR_USE_ROOM : Z.ERROR_USE, { item: noun });
+    }
+    // If it's dark, only allow using the blindfold
+    if ((dark || hero.blindfolded) && item.name.toLowerCase() !== C.BLINDFOLD) return Z.DARK_ACTION_BLOCKED;
+
+    const [msg, action] = item.use(hero, thisRoom, gameMap);
+    if (msg !== "") showText(msg, { full_box: true });
+    return action;
+  }
+
+  return Action.CONTINUE;
+}
+
+// ---------------------------------------------------------------------------
+// gameplay.py + ClassVenture.py (event-driven instead of a blocking loop)
+// ---------------------------------------------------------------------------
+let game = null;   // { items, rooms, gameMap, hero, thisRoom, dark }
+const cmdEl = document.getElementById("cmd");
+const goEl = document.getElementById("go");
+const statusEl = document.getElementById("status");
+
+function setPlaying(playing) {
+  cmdEl.disabled = !playing;
+  goEl.disabled = !playing;
+  document.querySelectorAll("#chips button").forEach(b => { b.disabled = !playing; });
+  if (playing) cmdEl.focus({ preventScroll: true });
+}
+
+function updateStatus() {
+  if (!game) { statusEl.textContent = "A dungeon of fifteen rooms"; return; }
+  const visited = Object.values(game.rooms).filter(r => r.visited && !r.room_id.endsWith("a")).length;
+  const light = game.hero.hasLight() ? "torch lit" : "no light";
+  statusEl.innerHTML = `Rooms seen <b>${visited}/15</b> · ${light}`;
+}
+
+function measureWidth() {
+  const probe = document.createElement("pre");
+  probe.className = "block";
+  probe.style.cssText = "position:absolute;visibility:hidden";
+  probe.textContent = "M".repeat(40);
+  logEl.appendChild(probe);
+  const charWidth = probe.getBoundingClientRect().width / 40;
+  probe.remove();
+  const style = getComputedStyle(logEl);
+  const inner = logEl.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+  UI_WIDTH = Math.max(30, Math.min(60, Math.floor(inner / charWidth) - 1));
+}
+
+function startGame(continueGame) {
+  measureWidth();
+  let items, rooms, gameMap, hero, msg;
+  const save = continueGame ? readSave() : null;
+  if (save) {
+    items = loadItems(save.items);
+    rooms = loadRooms(save.rooms);
+    gameMap = new GameMap(save.map);
+    hero = new Player({ ...save.player, items: save.player.items.map(id => items[id]) });
+    msg = Z.RESUME_GAME;
+  } else {
+    items = loadItems(ITEMS_JSON);
+    rooms = loadRooms(ROOMS_JSON);
+    gameMap = new GameMap(MAP_JSON);
+    hero = new Player();
+    shuffle(items[C.WIZARD].use_sayings);
+    msg = Z.START_GAME;
+  }
+  deleteSave();
+  linkItems(rooms, items);
+  game = { items, rooms, gameMap, hero, thisRoom: null, dark: false };
+
+  const first = showText(msg, { full_box: true });
+  setPlaying(true);
+  enterRoom();
+  revealFrom(first);
+}
+
+function shuffle(list) {
+  for (let i = list.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [list[i], list[j]] = [list[j], list[i]];
+  }
+}
+
+function enterRoom() {
+  const { rooms, gameMap, hero, items } = game;
+  const thisRoom = rooms[gameMap.roomAt(hero.x, hero.y)];
+
+  // Waterfall puts out torch
+  if (thisRoom.room_id === C.WATERFALL) {
+    const torch = items[C.TORCH];
+    if (hero.items.includes(torch) && torch.lit) {
+      torch.lit = false;
+      showText(torch.use_extinguish, { full_box: true });
+    }
+  }
+  const dark = thisRoom.dark && !hero.hasLight();
+  showRoom(hero, thisRoom, dark);
+  game.thisRoom = thisRoom;
+  game.dark = dark;
+  updateStatus();
+  if (hero.dead) endGame();
+}
+
+function handleCommand(raw) {
+  if (!game) return;
+  const echo = document.createElement("p");
+  echo.className = "cmd";
+  echo.textContent = raw;
+  appendToLog(echo);
+
+  const parsed = validateInput(raw);
+  if (!parsed) { revealFrom(echo); return; }
+  const [verb, noun] = parsed;
+  const { thisRoom, dark, hero, items, gameMap } = game;
+  const nextAction = processInput(verb, noun, dark, thisRoom, hero, items, gameMap);
+
+  if (nextAction === Action.END_GAME) endGame();
+  else if (nextAction === Action.DISPLAY_ROOM) enterRoom();
+  else if (nextAction !== Action.CONTINUE) {
+    showText(nextAction, { sides: true, border: " ", blank_start: 1, blank_end: 1 });
+  }
+  updateStatus();
+  // When the game just ended, show the end screen and menu; otherwise show this turn's output
+  if (game) revealFrom(echo);
+  else logEl.scrollTop = logEl.scrollHeight;
+}
+
+function endGame() {
+  const { hero, items, rooms, gameMap } = game;
+  if (hero.dead) {
+    const [health] = hero.wellness();
+    showText(health ? Z.DEATH_BY_FATIGUE : Z.DEATH_BY_HUNGER,
+      { border: "#", top: true, bottom: true, sides: true, blank_end: 1, blank_start: 1, center: true });
+  } else if (hero.escaped) {
+    showText(hero.hasItem("gem") ? Z.WIN_WITH_GEM : Z.WIN_NO_GEM,
+      { border: "o", center: true, top: true, bottom: true, sides: true, blank_start: 2, blank_end: 2 });
+  } else {
+    const saved = writeSave(items, rooms, gameMap, hero);
+    const quitMsg = saved ? Z.QUIT : Z.QUIT.replace(/\s*\(.*\)\s*$/, "") + " (This browser wouldn't let the game save, so your progress is lost.)";
+    showText(quitMsg, { border: "#", top: true, bottom: true, sides: true, blank_end: 1, blank_start: 1, center: true });
+  }
+  game = null;
+  setPlaying(false);
+  updateStatus();
+  showMenu();
+}
+
+// ---------------------------------------------------------------------------
+// Title screen and controls
+// ---------------------------------------------------------------------------
+function showMenu() {
+  const menu = document.createElement("div");
+  menu.className = "menu";
+  const choose = (continueGame) => { menu.remove(); startGame(continueGame); };
+  if (readSave()) {
+    const resume = document.createElement("button");
+    resume.className = "primary";
+    resume.textContent = "Continue your adventure";
+    resume.onclick = () => choose(true);
+    menu.appendChild(resume);
+  }
+  const fresh = document.createElement("button");
+  fresh.className = readSave() ? "" : "primary";
+  fresh.textContent = readSave() ? "Start over" : "Begin a new adventure";
+  fresh.onclick = () => choose(false);
+  menu.appendChild(fresh);
+  appendToLog(menu);
+}
+
+document.getElementById("form").addEventListener("submit", (event) => {
+  event.preventDefault();
+  const raw = cmdEl.value.trim();
+  if (!raw) return;
+  cmdEl.value = "";
+  handleCommand(raw);
+});
+
+document.getElementById("chips").addEventListener("click", (event) => {
+  const button = event.target.closest("button");
+  if (!button || button.disabled) return;
+  if (button.dataset.cmd) {
+    handleCommand(button.dataset.cmd);
+  } else if (button.dataset.fill) {
+    cmdEl.value = button.dataset.fill;
+    cmdEl.focus();
+  }
+});
+
+async function boot() {
+  try { await document.fonts.ready; } catch { /* fonts optional */ }
+  measureWidth();
+  showText(["", "EricVenture", ""], { center: true, top: true, bottom: true, sides: true, blank_start: 1 });
+  showText(readSave() ? "A previous adventure is waiting for you." : "Somewhere below, a dungeon is waiting.",
+    { center: true, blank_start: 1 });
+  setPlaying(false);
+  showMenu();
+}
+boot();
+</script>
+
+</body></html>

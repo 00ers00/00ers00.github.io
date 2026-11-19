@@ -1,0 +1,135 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMax slice">
+  <!-- Late Wizard landscape: pastel dusk, layered mountains, a winding road to a lit tower -->
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e4def2"/>
+      <stop offset="0.45" stop-color="#f3e6ef"/>
+      <stop offset="0.75" stop-color="#fbeee0"/>
+      <stop offset="1" stop-color="#fdf3e4"/>
+    </linearGradient>
+    <radialGradient id="sunGlow" cx="1180" cy="420" r="420" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffe7c7" stop-opacity="0.95"/>
+      <stop offset="0.35" stop-color="#fde0c8" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#fde0c8" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="windowGlow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#ffd27a" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#ffd27a" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="lanternGlow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#ffcf7d" stop-opacity="0.75"/>
+      <stop offset="1" stop-color="#ffcf7d" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="mist" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="#ffffff" stop-opacity="0.75"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="road" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#f4e8d0"/>
+      <stop offset="1" stop-color="#f8efe0"/>
+    </linearGradient>
+    <g id="lantern">
+      <circle cx="0" cy="-34" r="26" fill="url(#lanternGlow)"/>
+      <rect x="-1.5" y="-30" width="3" height="30" fill="#a99bb5"/>
+      <rect x="-5" y="-40" width="10" height="11" rx="2" fill="#ffd98f" stroke="#a99bb5" stroke-width="1.5"/>
+      <path d="M-6,-40 L0,-46 L6,-40 Z" fill="#a99bb5"/>
+    </g>
+  </defs>
+
+  <!-- Sky and sun glow -->
+  <rect width="1600" height="1000" fill="url(#sky)"/>
+  <rect width="1600" height="1000" fill="url(#sunGlow)"/>
+  <circle cx="1180" cy="420" r="46" fill="#fff4e2" opacity="0.9"/>
+
+  <!-- Faint stars in the upper sky -->
+  <g fill="#ffffff" opacity="0.85">
+    <circle cx="140" cy="90" r="2.2"/><circle cx="310" cy="160" r="1.6"/><circle cx="470" cy="70" r="2.6"/>
+    <circle cx="640" cy="140" r="1.5"/><circle cx="820" cy="60" r="2"/><circle cx="980" cy="120" r="1.4"/>
+    <circle cx="1350" cy="80" r="2.4"/><circle cx="1500" cy="150" r="1.7"/><circle cx="1240" cy="190" r="1.3"/>
+    <circle cx="80" cy="230" r="1.4"/><circle cx="560" cy="230" r="1.2"/><circle cx="1440" cy="260" r="1.5"/>
+  </g>
+  <g fill="#f3d9a4" opacity="0.8">
+    <path d="M470,62 l2,6 6,2 -6,2 -2,6 -2,-6 -6,-2 6,-2z"/>
+    <path d="M1350,72 l2,6 6,2 -6,2 -2,6 -2,-6 -6,-2 6,-2z"/>
+  </g>
+
+  <!-- Farthest mountains -->
+  <path d="M0,560 L120,470 L210,520 L340,400 L450,480 L560,380 L690,470 L800,410 L930,490 L1040,420
+           L1160,500 L1290,390 L1420,470 L1520,420 L1600,460 L1600,640 L0,640 Z" fill="#dcd6ea"/>
+  <g fill="#f5f2fa" opacity="0.9">
+    <path d="M340,400 L310,428 L330,424 L345,436 L362,420 L372,430 Z"/>
+    <path d="M560,380 L528,410 L548,404 L562,418 L578,402 L592,412 Z"/>
+    <path d="M1290,390 L1258,420 L1278,414 L1292,428 L1308,410 L1322,420 Z"/>
+  </g>
+
+  <!-- Middle mountains -->
+  <path d="M0,600 L90,540 L190,580 L300,500 L410,570 L520,520 L620,580 L760,505 L880,575 L990,530
+           L1100,590 L1230,520 L1350,580 L1470,530 L1600,570 L1600,760 L0,760 Z" fill="#d0d0e4"/>
+  <g fill="#f3f1f9" opacity="0.85">
+    <path d="M300,500 L276,522 L292,518 L302,528 L316,514 L326,522 Z"/>
+    <path d="M760,505 L734,528 L752,522 L762,532 L776,518 L788,526 Z"/>
+    <path d="M1230,520 L1206,542 L1222,538 L1232,548 L1246,534 L1256,542 Z"/>
+  </g>
+
+  <!-- Mist band -->
+  <rect x="0" y="560" width="1600" height="120" fill="url(#mist)"/>
+
+  <!-- Tower hill and far meadow -->
+  <path d="M0,690 C200,650 380,670 560,655 C680,640 740,600 820,604 C940,610 1000,605 1060,610 C1180,595 1300,620 1420,640
+           C1500,652 1560,650 1600,655 L1600,760 L0,760 Z" fill="#d6e5d6"/>
+
+  <!-- The tower, with one lit window -->
+  <g transform="translate(-330,-4)">
+    <circle cx="1132" cy="545" r="46" fill="url(#windowGlow)"/>
+    <path d="M1112,612 L1116,520 L1148,520 L1152,612 Z" fill="#cbc4d9"/>
+    <path d="M1110,522 L1132,470 L1154,522 Z" fill="#b6a8cc"/>
+    <rect x="1108" y="518" width="48" height="6" rx="2" fill="#bdb3cf"/>
+    <rect x="1127" y="538" width="10" height="15" rx="5" fill="#ffd27a"/>
+    <rect x="1124" y="585" width="16" height="27" rx="8" fill="#b6a8cc"/>
+    <path d="M1132,470 L1132,456" stroke="#b6a8cc" stroke-width="2"/>
+    <path d="M1132,456 L1146,460 L1132,465 Z" fill="#e8b4b8"/>
+  </g>
+
+  <!-- Second mist band, thin -->
+  <rect x="0" y="650" width="1600" height="70" fill="url(#mist)" opacity="0.7"/>
+
+  <!-- Rolling middle hills -->
+  <path d="M0,760 C180,720 320,735 470,725 C640,712 760,690 920,700 C1080,708 1220,690 1380,705
+           C1480,714 1550,712 1600,716 L1600,1000 L0,1000 Z" fill="#cfe1cf"/>
+  <path d="M640,1000 C760,900 900,820 1050,790 C1200,768 1350,782 1460,792 C1530,797 1570,793 1600,792 L1600,1000 Z" fill="#c5dbc8"/>
+
+  <!-- Winding road from the foreground to the tower -->
+  <path d="M120,1000
+           C 300,930 560,900 760,840
+           C 900,795 700,760 820,722
+           C 880,700 770,660 795,608
+           L 809,608
+           C 800,650 930,690 880,728
+           C 790,762 1000,800 860,858
+           C 660,935 520,960 470,1000 Z" fill="url(#road)"/>
+  <path d="M120,1000 C 300,930 560,900 760,840 C 900,795 700,760 820,722 C 880,700 770,660 795,608"
+        fill="none" stroke="#e7d7ba" stroke-width="3" opacity="0.8"/>
+
+  <!-- Lanterns along the road, smaller with distance -->
+  <use href="#lantern" transform="translate(880,850) scale(0.95)"/>
+  <use href="#lantern" transform="translate(895,722) scale(0.7)"/>
+  <use href="#lantern" transform="translate(770,660) scale(0.5)"/>
+
+  <!-- Foreground hill -->
+  <path d="M0,880 C160,860 300,900 430,935 C540,965 600,985 640,1000 L0,1000 Z" fill="#c2d9c2"/>
+  <path d="M1250,1000 C1330,930 1450,900 1600,890 L1600,1000 Z" fill="#bfd6c1"/>
+
+  <!-- Grass tufts and a few pastel flowers -->
+  <g stroke="#a9c7ab" stroke-width="2.5" stroke-linecap="round" fill="none">
+    <path d="M60,930 l-6,-18 M66,930 l2,-22 M72,930 l8,-16"/>
+    <path d="M240,920 l-5,-16 M246,920 l2,-20 M252,920 l7,-14"/>
+    <path d="M1380,950 l-5,-16 M1386,950 l2,-20 M1392,950 l7,-14"/>
+    <path d="M1520,930 l-6,-18 M1526,930 l2,-22 M1532,930 l8,-16"/>
+  </g>
+  <g>
+    <circle cx="150" cy="945" r="5" fill="#f2c4cf"/><circle cx="182" cy="958" r="4" fill="#f6dfa4"/>
+    <circle cx="330" cy="950" r="4.5" fill="#c9c1ea"/><circle cx="1450" cy="955" r="5" fill="#f2c4cf"/>
+    <circle cx="1480" cy="970" r="4" fill="#c9c1ea"/><circle cx="1330" cy="972" r="4" fill="#f6dfa4"/>
+  </g>
+</svg>
